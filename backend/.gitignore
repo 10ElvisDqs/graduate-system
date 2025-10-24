@@ -1,0 +1,22 @@
+# Archivos de Python
+*.pyc
+__pycache__/
+
+# Entorno virtual
+env/
+venv/
+
+# Archivos de configuración locales
+*.sqlite3
+*.log
+
+# Carpeta de migraciones (opcional)
+*/migrations/*.py
+*/migrations/*.pyc
+
+# Archivos del sistema
+.DS_Store
+*.swp
+
+# Carpeta de node_modules si usas frontend
+node_modules/
