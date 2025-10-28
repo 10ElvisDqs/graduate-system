@@ -1,54 +1,47 @@
-  /* --- MEJORA UI: Animación de entrada --- */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+/* Card general */
+.menu-item-card {
+  background: #ffffff;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
-  .menu-item-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 20px 10px;
-    min-height: 130px; 
-    /* Aplicamos la animación de entrada */
-    animation: fadeIn 0.3s ease-out; 
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
+.menu-item-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+}
 
-  /* --- MEJORA UI: Efecto Hover --- */
-  .menu-item-card:hover,
-  .menu-item-category:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 16px rgba(0, 0, 0, 0.1) !important; /* !important para sobreescribir shadow-sm */
-  }
+/* Icono con gradiente */
+.text-gradient {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-  .menu-item-category {
-    cursor: pointer;
-  }
+/* Título */
+.menu-item-title {
+  font-size: 0.95rem;
+  color: #343a40;
+  text-align: center;
+}
 
-  .menu-item-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f4f9;
-    margin-bottom: 10px;
-  }
+/* Ripple effect al click */
+.menu-item-card .ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  background-color: rgba(0, 123, 255, 0.3);
+  pointer-events: none;
+}
 
-  .menu-item-icon .bi {
-    color: #0066ff; 
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
   }
+}
 
-  .menu-item-title {
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-align: center;
-    color: #333;
-  }
+.menu-item-card:active .ripple {
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+}

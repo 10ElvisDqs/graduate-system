@@ -1,8 +1,8 @@
 export interface MenuItem {
-  id: number
+  id: string | number
   title: string
   icon?: string
-  url?: string
+  url?: string | null
   order: number
   notificationCount?: number
   hasChildren?: boolean

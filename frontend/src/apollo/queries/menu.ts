@@ -5,6 +5,7 @@ import type { MenuItem } from "../../interfaces/menu";
 export type MainMenuType = {
   rootMenuItems: MenuItem[];
 };
+
 export type MenuItemChildren = {
   menuItem: MenuItem[];
 };

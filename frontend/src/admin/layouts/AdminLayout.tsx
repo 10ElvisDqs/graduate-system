@@ -1,57 +1,45 @@
-import { useState, useMemo } from 'react';
-import { Outlet, useParams } from 'react-router';
-import { useQuery } from '@apollo/client/react';
-import { GET_CHILD_MENU_ITEMS } from '../../apollo/queries/menu';
-import { AdminSidebar } from '../components/AdminSidebar';
+import { useState } from "react";
+import { AdminSidebar } from "../components/AdminSidebar";
+import type { MenuItem } from "../../interfaces/menu";
+import { AdminHeader } from "../components/AdminHeader";
 
-const AdminLayout = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const { id } = useParams();
+interface AdminLayoutProps {
+  childrenMenu: MenuItem[];
+  onBack: () => void;
+}
 
-  // 🧠 Convertimos el id en número solo si existe y es válido
-  const numericId = useMemo(() => {
-    const parsed = Number(id);
-    return !isNaN(parsed) && parsed > 0 ? parsed : null;
-  }, [id]);
-
-  // 🚫 Ejecutamos la query solo si hay un id válido
-  const { data, loading, error } = useQuery(GET_CHILD_MENU_ITEMS, {
-    skip: !numericId, // 👈 evita ejecutar la query con id inválido
-    variables: { id: numericId ?? 0 },
-  });
-
-  // 🧩 Debug limpio
-  if (numericId && data) {
-    console.log('🔹 Consultando menú para ID:', numericId);
-    console.log('📦 Datos obtenidos:', data.menuItem);
-  }
-
-  // 🎯 Estado de carga y errores
-  if (loading) {
-    return <p className="text-center mt-5">Cargando menú...</p>;
-  }
-
-  if (error) {
-    return (
-      <p className="text-center mt-5 text-danger">
-        Error al cargar menú: {error.message}
-      </p>
-    );
-  }
+const AdminLayout = ({ childrenMenu, onBack }: AdminLayoutProps) => {
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="d-flex min-vh-100 bg-light">
-      {/* 🔹 Sidebar dinámico */}
+      {/* Sidebar dinámico */}
       <AdminSidebar
-        isCollapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        menuItems={data?.menuItem.children || []} // ✅ CORRECTO
+        isCollapsed={collapsed}
+        onToggle={() => setCollapsed(!collapsed)}
+        menuItems={childrenMenu}
       />
 
-      {/* 🔹 Contenido principal */}
+      {/* Contenido principal */}
       <div className="flex-grow-1 d-flex flex-column">
-        <main className="flex-grow-1 p-3">
-          <Outlet context={{ id: numericId }} />
+        {/* Header */}
+        <AdminHeader />
+        <div className="d-flex justify-content-between align-items-center bg-white shadow-sm p-3">
+          <h5 className="mb-0">Panel de Administración</h5>
+          <button 
+            className="btn btn-outline-primary btn-sm"
+            onClick={onBack}
+          >
+            <i className="bi bi-arrow-left me-1"></i> Volver al menú
+          </button>
+        </div>
+
+        {/* Main */}
+        <main className="flex-grow-1 p-4 bg-light">
+          <div className="container-fluid">
+            {/* Aquí se renderizan las páginas hijas */}
+            <p>Selecciona un item del sidebar para ver su contenido.</p>
+          </div>
         </main>
       </div>
     </div>
