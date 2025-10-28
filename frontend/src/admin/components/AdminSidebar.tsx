@@ -29,6 +29,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
   user = defaultUser,
   onLogout
 }) => {
+  console.log('Menu Items in Sidebar:', menuItems);
   const { pathname } = useLocation();
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
 
@@ -119,7 +120,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
         
         {!isCollapsed && (
           <div className="d-flex align-items-center gap-2" style={{ flexShrink: 0 }}>
-            {item.notificationCount > 0 && (
+            {(item.notificationCount ?? 0) > 0 && (
               <span 
                 className="badge bg-danger rounded-pill" 
                 style={{ 
@@ -128,7 +129,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
                   padding: '0.2rem 0.4rem'
                 }}
               >
-                {item.notificationCount > 99 ? '99+' : item.notificationCount}
+                {(item.notificationCount ?? 0) > 99 ? '99+' : item.notificationCount}
               </span>
             )}
             {hasValidChildren && (

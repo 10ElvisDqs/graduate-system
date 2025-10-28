@@ -13,16 +13,22 @@ import { ProjectsPage } from './admin/pages/projects/ProjectsPage';
 import { SettingsGeneralPage } from './admin/pages/settings/SettingsGeneralPage';
 
 const AdminLayout = lazy(() => import('./admin/layouts/AdminLayout'));
+const AppGridLayout = lazy(() => import('./admin/layouts/AppGridLayout'));
 
 export const appRouter = createHashRouter([
   {
-    path: '/',
-    element: <AdminLayout />,
+    path: '',
+    element: <AppGridLayout />,
+  },
+  {
+
+    path: '/admin/:id?',
+      element: <AdminLayout />,
     children: [
-      {
-        index: true,
-        element: <Navigate to="/dashboard" replace />,
-      },
+      // {
+      //   index: true,
+      //   element: <Navigate to="/admin/dashboard" replace />,
+      // },
       {
         path: 'dashboard',
         element: <DashboardPage />,
@@ -67,6 +73,6 @@ export const appRouter = createHashRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/admin/dashboard" replace />,
   },
 ]);

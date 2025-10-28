@@ -4,8 +4,8 @@ export interface MenuItem {
   icon?: string
   url?: string
   order: number
-  notificationCount: number
-  hasChildren: boolean
+  notificationCount?: number
+  hasChildren?: boolean
   children?: MenuItem[]
   parent?: MenuItem
 }
