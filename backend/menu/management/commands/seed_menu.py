@@ -1,122 +1,46 @@
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import Permission, ContentType
 from menu.models import MenuItem
 
 class Command(BaseCommand):
-    help = 'Seed the database with sample menu items'
+    help = 'Seed basic sidebar items'
 
     def handle(self, *args, **kwargs):
         # Limpiar datos existentes
         MenuItem.objects.all().delete()
-        
-        # Dashboard
-        dashboard = MenuItem.objects.create(
-            title='Dashboard',
-            icon='bi-speedometer2',
-            url='/dashboard',
-            order=1,
-            notification_count=0
-        )
-        
-        # Getting Started (con hijos)
-        getting_started = MenuItem.objects.create(
-            title='Getting Started',
-            icon='bi-rocket-takeoff',
-            order=2
-        )
-        MenuItem.objects.create(
-            title='Supported Frameworks',
-            icon='bi-layers',
-            url='/frameworks',
-            parent=getting_started,
-            order=1
-        )
-        MenuItem.objects.create(
-            title='Incremental Migration',
-            icon='bi-arrow-repeat',
-            url='/migration',
-            parent=getting_started,
-            order=2
-        )
-        MenuItem.objects.create(
-            title='Production Checklist',
-            icon='bi-check-circle',
-            url='/checklist',
-            parent=getting_started,
-            order=3,
-            notification_count=3
-        )
-        
-        # Access (con hijos)
-        access = MenuItem.objects.create(
-            title='Access',
-            icon='bi-shield-lock',
-            order=3
-        )
-        MenuItem.objects.create(
-            title='AI',
-            icon='bi-cpu',
-            url='/ai',
-            parent=access,
-            order=1
-        )
-        MenuItem.objects.create(
-            title='API',
-            icon='bi-code-slash',
-            url='/api',
-            parent=access,
-            order=2
-        )
-        MenuItem.objects.create(
-            title='Build & Deploy',
-            icon='bi-hammer',
-            url='/build',
-            parent=access,
-            order=3
-        )
-        
-        # Projects
-        projects = MenuItem.objects.create(
-            title='Projects',
-            icon='bi-folder',
-            url='/projects',
-            order=4,
-            notification_count=5
-        )
-        
-        # Settings (con hijos anidados)
-        settings = MenuItem.objects.create(
-            title='Settings',
-            icon='bi-gear',
-            order=5
-        )
-        
-        general = MenuItem.objects.create(
-            title='General',
-            icon='bi-sliders',
-            url='/settings/general',
-            parent=settings,
-            order=1
-        )
-        
-        security = MenuItem.objects.create(
-            title='Security',
-            icon='bi-lock',
-            parent=settings,
-            order=2
-        )
-        MenuItem.objects.create(
-            title='Authentication',
-            icon='bi-key',
-            url='/settings/security/auth',
-            parent=security,
-            order=1
-        )
-        MenuItem.objects.create(
-            title='Permissions',
-            icon='bi-person-check',
-            url='/settings/security/permissions',
-            parent=security,
-            order=2
-        )
-        
-        self.stdout.write(self.style.SUCCESS('Successfully seeded menu items'))
+
+        # Obtener permisos base
+        content_type = ContentType.objects.get_for_model(MenuItem)
+        add_perm = Permission.objects.get(codename='add_menuitem', content_type=content_type)
+        change_perm = Permission.objects.get(codename='change_menuitem', content_type=content_type)
+
+        # Helper para crear items
+        def create_item(title, icon, url=None, parent=None, order=0, perms=[]):
+            item = MenuItem.objects.create(
+                title=title,
+                icon=icon,
+                url=url,
+                parent=parent,
+                order=order
+            )
+            if perms:
+                item.required_permissions.add(*perms)
+            return item
+
+        # 🔹 Rutas principales
+        inicio = create_item("Inicio", "bi-house", url="/postgrado/", order=1)
+        perfil = create_item("Perfil", "bi-person", url="/postgrado/perfil", order=2)
+
+        # 🔹 Académico con hijos
+        academico = create_item("Académico", "bi-book", order=3)
+        create_item("Entidad Académica", "bi-people", url="/postgrado/entidades-academicas", parent=academico, order=1)
+        create_item("Planes Formación", "bi-journal", url="/postgrado/planes-formacion", parent=academico, order=2)
+        create_item("Materias", "bi-journal-text", url="/postgrado/materias", parent=academico, order=3)
+
+        # 🔹 Estudiantes con hijos
+        estudiantes = create_item("Estudiantes", "bi-people-fill", order=4)
+        create_item("Vencimiento Plan", "bi-calendar-check", url="/postgrado/vencimiento-plan", parent=estudiantes, order=1)
+        create_item("Certificado de Notas", "bi-file-earmark-text", url="/postgrado/certificado-notas", parent=estudiantes, order=2)
+        create_item("Fichas Datos Personales", "bi-person-lines-fill", url="/postgrado/fichas", parent=estudiantes, order=3)
+
+        self.stdout.write(self.style.SUCCESS("Sidebar items seeded successfully!"))

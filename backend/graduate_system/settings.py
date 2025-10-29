@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'corsheaders',
     # Local apps
-    'menu',
+    'menu.apps.MenuConfig',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +58,15 @@ MIDDLEWARE = [
 # GraphQL Configuration
 GRAPHENE = {
     'SCHEMA': 'menu.schema.schema',
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
 }
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
