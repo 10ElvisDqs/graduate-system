@@ -18,7 +18,7 @@ import { SettingsGeneralPage } from './admin/pages/settings/SettingsGeneralPage'
 
 export const appRouter = createHashRouter([
   {
-    path: '', // ruta raíz
+    path: '/', // ruta raíz
     element: (
       <Suspense fallback={<div>Cargando AppGridLayout...</div>}>
         <AppGridLayout/>

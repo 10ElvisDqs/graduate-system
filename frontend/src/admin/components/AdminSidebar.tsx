@@ -96,7 +96,6 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
     // Componente del contenido del item
     const ItemContent = () => (
       <>
-        <div className="d-flex align-items-center gap-2 flex-grow-1" style={{ minWidth: 0 }}>
           <i 
             className={`bi ${item.icon}`} 
             style={{ 
@@ -105,6 +104,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
               opacity: level > 0 ? 0.8 : 1
             }}
           />
+        <div className="d-flex align-items-center gap-2 flex-grow-1" style={{ minWidth: 0 }}>
           {!isCollapsed && (
             <span 
               className="text-truncate" 

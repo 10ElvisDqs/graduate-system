@@ -30,8 +30,6 @@ class MenuItem(models.Model):
     def __str__(self):
         return self.title
 
-    # --- 🔽 MÉTODOS DE UTILIDAD SEGURA ---
-
     def has_children(self):
         """Verifica si el elemento tiene hijos (patrón Composite)"""
         return self.children.exists()
